@@ -1,6 +1,6 @@
+from tkinter import *
 class Node():
     """A node class for A* Pathfinding"""
-
     def __init__(self, parent=None, position=None):
         self.parent = parent
         self.position = position
@@ -95,9 +95,9 @@ def astar(maze, start, end):
             # Add the child to the open list
             open_list.append(child)
 
-
 def main():
-
+    start = (0,0)
+    end = (9,9)
     maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
@@ -108,12 +108,58 @@ def main():
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
-    start = (0, 0)
-    end = (8, 6)
-
-    path = astar(maze, start, end)
-    print(path)
+    root = Tk()
+    root.title('A Star Algorithm')
+    frameMaze = Frame(root, width = 500, height = 500, padx=30, pady=30)
+    frameMaze.pack(fill = None, expand = False)
+    grid = []
+    for i in range(10) :
+        row = []
+        for j in range(10) :
+            if maze[i][j]==1:
+                button = Button(frameMaze, width = 3, height = 1, borderwidth = 1, background = 'grey',relief = 'flat')
+                button.grid(row = i, column = j)
+                button.position = (i, j)
+                row.append(button)
+            else :
+                button = Button(frameMaze, width = 3, height = 1, borderwidth = 1)
+                button.grid(row = i, column = j)
+                button.position = (i, j)
+                row.append(button)
+        grid.append(row)
+    def update_buttons():
+        path = astar(maze, start, end)
+        for x in path :
+            i = x[0]
+            j = x[1]
+            grid[i][j].config(bg = "black")
+            if(x == path[0]):
+                grid[i][j].config(bg = "blue")
+            if(x==path[len(path)-1]) :
+                grid[i][j].config(bg = "red")
+    frameIndex = Frame(root)
+    frameIndex.pack()
+    labelIndex = Label(frameIndex, text = "INDEX :")
+    labelIndex.pack()
+    labelBlue = Label(frameIndex, text = 'Start Node : ' )
+    labelBlue.pack()
+    buttonBlue = Button(frameIndex, width = 3, height = 1, borderwidth = 1, bg = 'Blue')
+    buttonBlue.pack()
+    labelRed = Label(frameIndex, text = 'End Node : ' )
+    labelRed.pack()
+    buttonBlue = Button(frameIndex, width = 3, height = 1, borderwidth = 1, bg = 'Red')
+    buttonBlue.pack()
+    labelBlack = Label(frameIndex, text = 'Path : ' )
+    labelBlack.pack()
+    buttonBlue = Button(frameIndex, width = 3, height = 1, borderwidth = 1, bg = 'Black')
+    buttonBlue.pack()
+    frameButton = Frame(root)
+    frameButton.pack(side = BOTTOM)
+    startButton = Button(frameButton, text='Start!', width = 15, command = update_buttons)
+    quitButton = Button(frameButton, text='Quit!', width = 15, command = root.destroy)
+    startButton.pack(side = LEFT)
+    quitButton.pack(side = LEFT)
+    root.mainloop()
 
 
 if __name__ == '__main__':
